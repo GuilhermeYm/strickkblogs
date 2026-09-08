@@ -9,8 +9,8 @@ import { defineConfig, fontProviders } from 'astro/config';
 // - Se o repositório se chamar "seu-usuario.github.io", use site: 'https://seu-usuario.github.io' e REMOVA a linha "base".
 // - Se for um repositório com outro nome (ex: "meu-blog"), mantenha as duas linhas como estão.
 export default defineConfig({
-	site: 'https://seu-usuario.github.io',
-	base: '/nome-do-repositorio',
+	site: 'https://GuilhermeYm.github.io',
+	base: '/strickkblogs',
 	integrations: [mdx(), sitemap()],
 	fonts: [
 		{
