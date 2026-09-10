@@ -1,0 +1,52 @@
+---
+interface Props {
+	tags: string[];
+}
+
+const { tags } = Astro.props;
+// BASE_URL pode vir sem barra final (ex.: '/strickkblogs'); normalizamos para montar os links.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+{
+	tags.length > 0 && (
+		<ul class="tag-list">
+			{tags.map((tag) => (
+				<li>
+					<a href={`${base}tags/${tag}/`}>#{tag}</a>
+				</li>
+			))}
+		</ul>
+	)
+}
+
+<style>
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5em;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	a {
+		display: inline-block;
+		padding: 0.15em 0.7em;
+		color: var(--text-muted);
+		font-size: 0.8em;
+		text-decoration: none;
+		border: 1px solid var(--border);
+		border-radius: 999px;
+	}
+	a:hover {
+		color: var(--text);
+		border-color: var(--text);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		a {
+			transition:
+				color 0.15s ease,
+				border-color 0.15s ease;
+		}
+	}
+</style>

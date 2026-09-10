@@ -1,0 +1,45 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<BaseHead
+			title={`Arquivos | ${SITE_TITLE}`}
+			description="Links para downloads de arquivos mencionados nos posts."
+		/>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Arquivos</h1>
+			<p class="intro">
+				Aqui ficam concentrados os links para downloads de arquivos mencionados nos posts.
+			</p>
+			<p>Nenhum arquivo disponível no momento.</p>
+			<!--
+				Para adicionar um arquivo, use este formato:
+
+				<ul>
+					<li>
+						<a href="/arquivos/nome-do-arquivo.zip">nome-do-arquivo.zip</a> — Breve descrição
+						do arquivo e do post relacionado.
+					</li>
+				</ul>
+
+				Coloque o arquivo em `public/arquivos/` para que ele seja servido estaticamente.
+			-->
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.intro {
+		color: var(--text-muted);
+	}
+</style>

@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_TITLE } from '../../consts';
+
+const posts = await getCollection('blog');
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+	for (const tag of post.data.tags) {
+		tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+	}
+}
+const tags = [...tagCounts.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+// BASE_URL pode vir sem barra final (ex.: '/strickkblogs'); normalizamos para montar os links.
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<BaseHead title={`Tags | ${SITE_TITLE}`} description="Todas as tags do blog." />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Tags</h1>
+			<ul class="tags">
+				{
+					tags.map(([tag, count]) => (
+						<li>
+							<a href={`${base}tags/${tag}/`}>#{tag}</a>
+							<span class="count">
+								{count} {count === 1 ? 'post' : 'posts'}
+							</span>
+						</li>
+					))
+				}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.tags {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.tags li {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 1em;
+		padding: 0.75em 0;
+	}
+	.tags li + li {
+		border-top: 1px solid var(--border);
+	}
+	.count {
+		font-size: 0.85em;
+		color: var(--text-muted);
+	}
+</style>

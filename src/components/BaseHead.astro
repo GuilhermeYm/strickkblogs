@@ -32,7 +32,21 @@ const { title, description, image = FallbackImage } = Astro.props;
 />
 <meta name="generator" content={Astro.generator} />
 
-<Font cssVariable="--font-atkinson" preload />
+<Font cssVariable="--font-inter" preload />
+
+<!-- Aplica o tema (light/dark) antes do primeiro paint para evitar flash -->
+<script is:inline>
+	(() => {
+		const stored = localStorage.getItem('theme');
+		const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+		document.documentElement.dataset.theme = stored ?? (systemDark.matches ? 'dark' : 'light');
+		systemDark.addEventListener('change', (event) => {
+			if (!localStorage.getItem('theme')) {
+				document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
+			}
+		});
+	})();
+</script>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
