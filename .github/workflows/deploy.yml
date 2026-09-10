@@ -15,7 +15,7 @@ permissions:
 
 # Evita builds concorrentes no mesmo deploy
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
@@ -26,7 +26,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Instalar, build e upload do site
-        uses: withastro/action@v3
+        uses: withastro/action@v6
+        with:
+          node-version: 24
         # Por padrão usa Node 20 e detecta npm/yarn/pnpm automaticamente
 
   deploy:
