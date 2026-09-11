@@ -14,8 +14,8 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 
 <ul class="post-list">
 	{
-		posts.map((post) => (
-			<li data-tags={post.data.tags.join(' ')}>
+		posts.map((post, index) => (
+			<li data-tags={post.data.tags.join(' ')} style={`--i: ${index}`}>
 				<span class="date">
 					<FormattedDate date={post.data.pubDate} />
 				</span>
@@ -37,6 +37,12 @@ const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 	}
 	li {
 		padding: 1.75em 0;
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		li {
+			animation: fade-in-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+			animation-delay: calc(0.15s + var(--i, 0) * 60ms);
+		}
 	}
 	li + li {
 		border-top: 1px solid var(--border);

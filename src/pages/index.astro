@@ -10,9 +10,22 @@ import { SITE_WELCOME, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort((a, b) =>
-	a.localeCompare(b),
-);
+
+// O dashboard de filtro mostra no máximo MAX_FILTER_TAGS chips (os mais usados),
+// para não poluir a home quando houver muitas tags. O input ainda filtra por
+// qualquer tag, e o link "Ver todas" leva ao índice completo em /tags/.
+const MAX_FILTER_TAGS = 10;
+const tagCount = new Map<string, number>();
+for (const post of posts) {
+	for (const tag of post.data.tags) {
+		tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+	}
+}
+const allTags = [...tagCount.entries()]
+	.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+	.slice(0, MAX_FILTER_TAGS)
+	.map(([tag]) => tag);
+const hasMoreTags = tagCount.size > allTags.length;
 ---
 
 <!doctype html>
@@ -55,6 +68,13 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort((a, b
 				</div>
 				<p id="filter-count" class="filter-count" aria-live="polite"></p>
 				<TagList tags={allTags} />
+				{
+					hasMoreTags && (
+						<a class="all-tags" href={`${import.meta.env.BASE_URL.replace(/\/?$/, '/')}tags/`}>
+							Ver todas as tags →
+						</a>
+					)
+				}
 			</nav>
 			<section>
 				<PostList posts={posts} />
@@ -154,6 +174,16 @@ const allTags = [...new Set(posts.flatMap((post) => post.data.tags))].sort((a, b
 	}
 	.filter-count:empty {
 		margin: 0;
+	}
+	.all-tags {
+		display: inline-block;
+		margin-top: 0.75em;
+		font-size: 0.85em;
+		text-decoration: none;
+		color: var(--text-muted);
+	}
+	.all-tags:hover {
+		color: var(--text);
 	}
 	.no-results {
 		padding: 1.25em 0;
